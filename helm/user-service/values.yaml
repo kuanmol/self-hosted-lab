@@ -1,9 +1,9 @@
 replicaCount: 1
 
 image:
-  repository: user-service
+  repository: anmolk992/user-service
   tag: latest
-  pullPolicy: Never
+  pullPolicy: Always
 
 service:
   type: ClusterIP
