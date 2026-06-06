@@ -1,0 +1,7 @@
+image: mysql:8
+
+auth:
+  rootPassword: root
+  database: shop
+  username: app
+  password: app

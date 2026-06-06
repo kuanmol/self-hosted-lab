@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-service
+spec:
+  replicas: {{ .Values.replicaCount }}
+
+  selector:
+    matchLabels:
+      app: user-service
+
+  template:
+    metadata:
+      labels:
+        app: user-service
+
+    spec:
+
+      initContainers:
+        - name: wait-for-mysql
+          image: mysql:8
+          command:
+            - sh
+            - -c
+            - |
+              until mysqladmin ping -h {{ .Values.db.host }} -uroot -proot --silent; do
+                echo "waiting for mysql..."
+                sleep 5
+              done
+
+      containers:
+        - name: user-service
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+
+          ports:
+            - containerPort: {{ .Values.service.port }}
+
+          env:
+            - name: SPRING_DATASOURCE_URL
+              value: {{ .Values.env.spring.datasource.url }}
+
+            - name: SPRING_DATASOURCE_USERNAME
+              value: {{ .Values.env.spring.datasource.username }}
+
+            - name: SPRING_DATASOURCE_PASSWORD
+              value: {{ .Values.env.spring.datasource.password }}

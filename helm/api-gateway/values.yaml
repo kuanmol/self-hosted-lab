@@ -1,0 +1,11 @@
+replicaCount: 1
+
+image:
+  repository: anmolk992/api-gateway
+  tag: latest
+  pullPolicy: Always
+
+service:
+  type: NodePort
+  port: 8080
+  nodePort: 30080
