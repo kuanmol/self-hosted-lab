@@ -1,0 +1,11 @@
+replicaCount: 1
+
+image:
+  repository: api-gateway
+  tag: latest
+  pullPolicy: Never
+
+service:
+  type: NodePort
+  port: 8080
+  nodePort: 30080
