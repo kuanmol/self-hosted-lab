@@ -25,14 +25,13 @@ jobs:
           java-version: '21'
 
       - name: Build with Maven
-        run: mvn clean package -DskipTests
+        run: mvn -q clean package -DskipTests --no-transfer-progress
         working-directory: user-service
 
       - name: Generate Tag
         id: tag
         run: |
-          DATE=$(date +'%Y%m%d')
-          TIME=$(date +'%H%M')
+          DATE=$(date +'%Y-%m-%d')
           SHA=$(git rev-parse --short HEAD)
 
           TAG="main-${DATE}-${TIME}-${SHA}"
