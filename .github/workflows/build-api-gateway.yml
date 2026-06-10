@@ -34,7 +34,7 @@ jobs:
           DATE=$(date +'%Y-%m-%d')
           SHA=$(git rev-parse --short HEAD)
 
-          TAG="main-${DATE}-${TIME}-${SHA}"
+          TAG="main-${DATE}-${SHA}"
 
           echo "tag=$TAG" >> $GITHUB_OUTPUT
 

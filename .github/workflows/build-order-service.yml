@@ -34,7 +34,7 @@ jobs:
           DATE=$(date +'%Y-%m-%d')
           SHA=$(git rev-parse --short HEAD)
 
-          TAG="main-${DATE}-${TIME}-${SHA}"
+          TAG="main-${DATE}-${SHA}"
 
           echo "tag=$TAG" >> $GITHUB_OUTPUT
 
@@ -50,7 +50,7 @@ jobs:
           context: ./order-service
           push: true
           tags: |
-            ${{ secrets.DOCKERHUB_orderNAME }}/order-service:${{ steps.tag.outputs.tag }}
+            ${{ secrets.DOCKERHUB_USERNAME }}/order-service:${{ steps.tag.outputs.tag }}
 
       - name: Show Image Tag
         run: echo "Published image tag = ${{ steps.tag.outputs.tag }}"
