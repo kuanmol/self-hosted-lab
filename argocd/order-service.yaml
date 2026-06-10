@@ -3,6 +3,10 @@ kind: Application
 metadata:
   name: order-service
   namespace: argocd
+  annotations:
+    argocd-image-updater.argoproj.io/image-list: order-service=anmolk992/order-service
+    argocd-image-updater.argoproj.io/order-service.update-strategy: newest-build
+    argocd-image-updater.argoproj.io/write-back-method: git
 spec:
   project: default
 

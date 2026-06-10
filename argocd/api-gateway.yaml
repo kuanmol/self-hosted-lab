@@ -3,6 +3,10 @@ kind: Application
 metadata:
   name: api-gateway
   namespace: argocd
+  annotations:
+    argocd-image-updater.argoproj.io/image-list: api-gateway=anmolk992/api-gateway
+    argocd-image-updater.argoproj.io/api-gateway.update-strategy: newest-build
+    argocd-image-updater.argoproj.io/write-back-method: git
 spec:
   project: default
 
