@@ -4,8 +4,9 @@ metadata:
   name: api-gateway
   namespace: argocd
   annotations:
-    argocd-image-updater.argoproj.io/image-list: api-gateway=anmolk992/api-gateway:main-*
+    argocd-image-updater.argoproj.io/image-list: api-gateway=anmolk992/api-gateway
     argocd-image-updater.argoproj.io/api-gateway.update-strategy: name
+    argocd-image-updater.argoproj.io/api-gateway.allow-tags: regexp:^main-.*$
     argocd-image-updater.argoproj.io/write-back-method: git
 spec:
   project: default
