@@ -12,7 +12,7 @@ spec:
 
   source:
     repoURL: https://github.com/kuanmol/self-hosted-lab.git
-    targetRevision: main
+    targetRevision: test-image-updater
     path: helm/order-service
 
   destination:
