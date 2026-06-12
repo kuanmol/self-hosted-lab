@@ -1,0 +1,83 @@
+name: Update Helm Image Tags
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  update-images:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v6
+
+      - name: Install tools (jq + yq)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y jq curl
+
+          sudo wget -qO /usr/local/bin/yq \
+            https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64
+          sudo chmod +x /usr/local/bin/yq
+
+      - name: Update image tags from Docker Hub
+        run: |
+          set -e
+
+          FILES=(
+            "helm/api-gateway/values.yaml"
+            "helm/order-service/values.yaml"
+            "helm/user-service/values.yaml"
+          )
+
+          UPDATED=false
+
+          for FILE in "${FILES[@]}"; do
+            echo "Processing $FILE"
+
+            REPO=$(yq '.image.repository' "$FILE")
+            CURRENT_TAG=$(yq '.image.tag' "$FILE")
+
+            echo "Repo: $REPO"
+            echo "Current tag: $CURRENT_TAG"
+
+            LATEST_TAG=$(curl -s \
+              "https://hub.docker.com/v2/repositories/${REPO}/tags?page_size=100" \
+              | jq -r '
+                  .results
+                  | map(select(.name != "latest"))
+                  | sort_by(.last_updated)
+                  | last
+                  | .name
+                ')
+
+            echo "Latest tag: $LATEST_TAG"
+
+            if [ "$CURRENT_TAG" != "$LATEST_TAG" ] && [ "$LATEST_TAG" != "null" ]; then
+              yq -i ".image.tag = \"$LATEST_TAG\"" "$FILE"
+              UPDATED=true
+            fi
+          done
+
+          echo "UPDATED=$UPDATED" >> $GITHUB_ENV
+
+      - name: Create Pull Request
+        if: env.UPDATED == 'true'
+        uses: peter-evans/create-pull-request@v8
+        with:
+          commit-message: "chore: update image tags from Docker Hub"
+          title: "chore: update image tags"
+          body: |
+            Manual sync from Docker Hub.
+
+            Updates latest SHA tags for:
+            - api-gateway
+            - order-service
+            - user-service
+
+          branch: update-image-tags
+          delete-branch: true
