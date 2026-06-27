@@ -1,9 +1,19 @@
 replicaCount: 1
+
 image:
   repository: anmolk992/api-gateway
   tag: main-2026-06-10-a00ba79
   pullPolicy: Always
+
 service:
   type: NodePort
   port: 8080
   nodePort: 30080
+
+resources:
+  requests:
+    memory: "56Mi"
+    cpu: "50m"
+  limits:
+    memory: "212Mi"
+    cpu: "200m"
