@@ -1,0 +1,40 @@
+name: GitOps PR Validation
+
+on:
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Install Helm
+        uses: azure/setup-helm@v3
+
+      - name: Helm Lint (all charts)
+        run: |
+          for chart in helm/*; do
+            echo "Linting $chart"
+            helm lint $chart
+          done
+
+      - name: Render Helm templates
+        run: |
+          mkdir -p rendered
+          for chart in helm/*; do
+            helm template test $chart > rendered/$(basename $chart).yaml
+          done
+
+      - name: Install kubeconform
+        run: |
+          curl -L -o kubeconform.tar.gz https://github.com/yannh/kubeconform/releases/latest/download/kubeconform-linux-amd64.tar.gz
+          tar -xzf kubeconform.tar.gz
+          sudo mv kubeconform /usr/local/bin/
+
+      - name: Validate Kubernetes YAML
+        run: |
+          kubeconform rendered/*.yaml
