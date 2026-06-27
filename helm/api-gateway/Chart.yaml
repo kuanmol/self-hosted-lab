@@ -1,3 +1,4 @@
 apiVersion: v2
 name: api-gateway
+description: Gateway endpoint for spring services
 version: 1.0.0

@@ -45,3 +45,6 @@ spec:
 
             - name: SPRING_DATASOURCE_PASSWORD
               value: {{ .Values.env.spring.datasource.password }}
+
+          resources:
+            {{ toYaml .Values.resources | nindent 12 }}
