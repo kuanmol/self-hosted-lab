@@ -16,7 +16,7 @@ db:
   host: mysql
 resources:
   requests:
-    memory: "56Mi"
+    memory: "200Mi"
     cpu: "50m"
   limits:
     memory: "212Mi"
