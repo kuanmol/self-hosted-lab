@@ -17,8 +17,8 @@ db:
   name: shop
 resources:
   requests:
-    memory: "200Mi"
-    cpu: "50m"
-  limits:
-    memory: "212Mi"
+    memory: "512Mi"
     cpu: "200m"
+  limits:
+    memory: "1Gi"
+    cpu: "500m"
