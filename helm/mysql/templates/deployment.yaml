@@ -28,14 +28,23 @@ spec:
             - name: MYSQL_PASSWORD
               value: {{ .Values.auth.password }}
 
+          volumeMounts:
+            - name: mysql-data
+              mountPath: /var/lib/mysql
+
           readinessProbe:
             exec:
               command:
                 - mysqladmin
                 - ping
                 - -h
-                - localhost
+                - 127.0.0.1
                 - -uroot
                 - -proot
-            initialDelaySeconds: 20
-            periodSeconds: 5
+            initialDelaySeconds: 60
+            periodSeconds: 10
+
+      volumes:
+        - name: mysql-data
+          persistentVolumeClaim:
+            claimName: mysql-pvc
