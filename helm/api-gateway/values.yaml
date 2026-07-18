@@ -1,7 +1,7 @@
 replicaCount: 1
 image:
   repository: anmolk992/api-gateway
-  tag: main-2026-06-27-abfe30b
+  tag: main-2026-07-18-e64a9d1
   pullPolicy: Always
 service:
   type: NodePort
