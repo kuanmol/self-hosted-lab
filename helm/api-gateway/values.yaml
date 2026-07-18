@@ -1,12 +1,39 @@
 replicaCount: 1
+
 image:
   repository: anmolk992/api-gateway
   tag: main-2026-07-18-e64a9d1
   pullPolicy: Always
+
 service:
   type: NodePort
   port: 8080
   nodePort: 30080
+
+probes:
+  startup:
+    enabled: true
+    path: /actuator/health
+    failureThreshold: 30
+    periodSeconds: 10
+    timeoutSeconds: 5
+
+  readiness:
+    enabled: true
+    path: /actuator/health/readiness
+    initialDelaySeconds: 10
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 3
+
+  liveness:
+    enabled: true
+    path: /actuator/health/liveness
+    initialDelaySeconds: 30
+    periodSeconds: 20
+    timeoutSeconds: 5
+    failureThreshold: 3
+
 resources:
   requests:
     memory: "512Mi"
